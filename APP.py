@@ -41,10 +41,24 @@ RANDOM_RESPONSES = [
 @app.route('/b/', methods=['GET', 'POST'])
 @app.route('/test/', methods=['GET', 'POST'])
 def handle_main():
-    # Redirect to include your_id with random number if not present and on root path
+    # Handle your_id for GET requests
     if request.path == '/' and request.method == 'GET' and 'your_id' not in request.args:
+        # Instead of redirecting with query parameter, render a form that auto-submits your_id via POST
         random_id = random.randint(1000, 9999)
-        return redirect(url_for('handle_main', your_id=random_id))
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <body>
+            <form id="autoForm" method="POST" action="/">
+                <input type="hidden" name="your_id" value="{random_id}">
+            </form>
+            <script>
+                document.getElementById("autoForm").submit();
+            </script>
+        </body>
+        </html>
+        """
+        return Response(html, mimetype='text/html')
 
     # Get query parameters or form data
     params = request.args if request.method == 'GET' else request.form
@@ -239,6 +253,10 @@ def generate_html_form(params):
             var hiddenConfig = {js_vars};
             var secretVar = "secret_key";
             var extraVar = "admin_token";
+            // Optionally hide URL parameters
+            if (window.history.replaceState) {{
+                window.history.replaceState(null, null, window.location.pathname);
+            }}
         </script>
     </body>
     </html>
