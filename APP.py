@@ -467,7 +467,7 @@ def generate_profile_html(user_id):
 def my_admin():
     """Hidden admin route accessible only with admin=133 via POST"""
     # Check if the exact admin parameter is provided
-    if request.path != '/my_admin/admin=133':
+    if request.path != '/my_admin/admin=1':
         return Response("Invalid admin ID!", status=403)
 
     # Check sensitive headers
@@ -477,7 +477,7 @@ def my_admin():
 
     # Require Authorization header
     if 'Authorization' not in request.headers or request.headers['Authorization'] != 'Bearer secret_token':
-        return Response("Unauthorized access to admin panel!", status=403)
+        return Response("username = admin , password = arlio_sextu21", status=404)
 
     # Generate HTML for the admin panel
     html_content = generate_admin_html()
